@@ -16,6 +16,7 @@ brushWidth = 5,
 selectedColor = "#000";
 
 const setCanvasBackground = () => {
+    // tüm tuval arka planını beyaz olarak ayarlayarak, indirilen görüntü arka planının beyaz olmasını sağlayın
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = selectedColor; 
@@ -29,13 +30,15 @@ window.addEventListener("load", () => {
 
 const drawRect = (e) => {
     if(!fillColor.checked) {
+        // fare imlecine göre daire oluşturuyoruz
+        // fare imlecine göre daire için yarıçap elde ediliyor
         return ctx.strokeRect(e.offsetX, e.offsetY, prevMouseX - e.offsetX, prevMouseY - e.offsetY);
     }
     ctx.fillRect(e.offsetX, e.offsetY, prevMouseX - e.offsetX, prevMouseY - e.offsetY);
 }
 
 const drawCircle = (e) => {
-    ctx.beginPath(); 
+    ctx.beginPath(); // daire çizmek için yeni yol oluşturuyoruz
     let radius = Math.sqrt(Math.pow((prevMouseX - e.offsetX), 2) + Math.pow((prevMouseY - e.offsetY), 2));
     ctx.arc(prevMouseX, prevMouseY, radius, 0, 2 * Math.PI); 
     fillColor.checked ? ctx.fill() : ctx.stroke(); 
@@ -43,10 +46,10 @@ const drawCircle = (e) => {
 
 const drawTriangle = (e) => {
     ctx.beginPath(); 
-    ctx.moveTo(prevMouseX, prevMouseY); 
-    ctx.lineTo(e.offsetX, e.offsetY); 
-    ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY); 
-    ctx.closePath(); 
+    ctx.moveTo(prevMouseX, prevMouseY); // üçgeni fare işaretçisine taşıma
+    ctx.lineTo(e.offsetX, e.offsetY); // fare imlecine göre ilk satırı oluşturuyoruz
+    ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY); // üçgenin alt satırı oluşturuluyor
+    ctx.closePath(); // üçüncü çizginin otomatik olarak çizilmesi için bir üçgenin yolu kapatılıyor
     fillColor.checked ? ctx.fill() : ctx.stroke(); 
 }
 
@@ -79,8 +82,9 @@ const drawing = (e) => {
 }
 
 toolBtns.forEach(btn => {
-    btn.addEventListener("click", () => { 
-        document.querySelector(".options .active").classList.remove("active");
+    btn.addEventListener("click", () => { // tüm araç seçeneklerine tıklama olayı ekleniyor
+        // aktif sınıfı önceki seçenekten kaldırmak ve mevcut tıklanan seçeneğe eklemek
+        document.querySelector(".options .active").classList.remove("active"); 
         btn.classList.add("active");
         selectedTool = btn.id;
     });
@@ -88,7 +92,8 @@ toolBtns.forEach(btn => {
 
 sizeSlider.addEventListener("change", () => brushWidth = sizeSlider.value); 
 colorBtns.forEach(btn => {
-    btn.addEventListener("click", () => { 
+    btn.addEventListener("click", () => { // tüm renk düğmelerine tıklama olayı ekleniyor
+        // seçilen sınıfı önceki seçenekten kaldırmak ve mevcut tıklanan seçeneğe eklemek
         document.querySelector(".options .selected").classList.remove("selected");
         btn.classList.add("selected");
         selectedColor = window.getComputedStyle(btn).getPropertyValue("background-color");
@@ -106,10 +111,10 @@ clearCanvas.addEventListener("click", () => {
 });
 
 saveImg.addEventListener("click", () => {
-    const link = document.createElement("a"); 
-    link.download = `${Date.now()}.jpg`; 
+    const link = document.createElement("a"); // <a> öğesi oluşturuluyor
+    link.download = `${Date.now()}.jpg`; // geçerli tarihi bağlantı indirme değeri olarak geçirmek
     link.href = canvas.toDataURL(); 
-    link.click(); 
+    link.click(); // resmi indirmek için linke tıklayın
 });
 
 canvas.addEventListener("mousedown", startDraw);
